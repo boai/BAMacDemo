@@ -27,6 +27,12 @@
 @property (weak) IBOutlet NSTextField *bugTitleTextField;
 @property (weak) IBOutlet EDStarRating *bugRating;
 @property (weak) IBOutlet NSImageView *bugImageView;
+@property (weak) IBOutlet NSButton *addButton;
+@property (weak) IBOutlet NSButton *deleteButton;
+
+- (IBAction)addButtonAction:(NSButton *)sender;
+- (IBAction)deleteButtonAction:(NSButton *)sender;
+
 
 
 @end
@@ -34,17 +40,17 @@
 @implementation ViewController
 
 #pragma mark - life cycle
-//- (void)viewWillAppear:(BOOL)animated
-//{
-//    [super viewWillAppear:animated];
-//    [self.navigationController setNavigationBarHidden:NO animated:YES];
-//}
-//
-//- (void)viewWillDisappear:(BOOL)animated
-//{
-//    [super viewWillDisappear:animated];
-//    
-//}
+- (void)viewWillAppear:(BOOL)animated
+{
+    [super viewWillAppear];
+
+}
+
+- (void)viewWillDisappear:(BOOL)animated
+{
+    [super viewWillDisappear];
+    
+}
 
 - (void)viewDidLoad
 {
@@ -61,6 +67,7 @@
     [self setupEDStarRaing];
 }
 
+/*! 初始化设置EDStarRaing */
 - (void)setupEDStarRaing
 {
     self.bugRating.starImage = [NSImage imageNamed:@"star.png"];
@@ -75,6 +82,7 @@
     self.bugRating.editable = NO;
 }
 
+/*! 获取选中的数据模型 */
 - (BABugsDoc *)selectedBugData
 {
     /*! 获取table view 的选中行号 */
@@ -87,6 +95,7 @@
     return nil;
 }
 
+/*! 根据数据设置视图信息 */
 - (void)setDetailInfo:(BABugsDoc *)data
 {
     NSString *title = nil;
@@ -150,7 +159,25 @@
 
 
 #pragma mark - event response
+- (IBAction)addButtonAction:(NSButton *)sender
+{
+    /*! 1.创建数据模型 */
+    BABugsDoc *newData = self.dataArrayBugs[random()%4];
+    /*! 2. 添加模型到数组中 */
+    [self.dataArrayBugs addObject:newData];
+    /*! 3. 获取添加后的行号 */
+    NSInteger newIndex = self.dataArrayBugs.count - 1;
+    /*! 4. 在table view 中插入新行 */
+    [self.bugsTableView insertRowsAtIndexes:[NSIndexSet indexSetWithIndex:newIndex] withAnimation:NSTableViewAnimationEffectFade];
+    /*! 5. 设置新行选中，并可见 */
+    [self.bugsTableView selectRowIndexes:[NSIndexSet indexSetWithIndex:newIndex] byExtendingSelection:NO];
+    [self.bugsTableView scrollRowToVisible:newIndex];
+}
 
+- (IBAction)deleteButtonAction:(NSButton *)sender
+{
+    
+}
 
 
 #pragma mark - getters and setters
@@ -174,5 +201,6 @@
     }
     return _dataArrayBugs;
 }
+
 
 @end
